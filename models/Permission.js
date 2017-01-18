@@ -52,6 +52,30 @@ var Permission = (function(permissionModel) {
     permissionModel.remove({_id: id}, callback);
   };
 
+  that.ADMIN = {
+    _id: 'ADMIN',
+    name: 'administrator',
+    description: 'Has all site permissions including adding members, changing roles, and scheduling events.',
+    is_physical: false
+  };
+  Object.freeze(that.ADMIN);
+
+  that.STORAGE = {
+    _id: 'STORAGE',
+    name: 'storage access',
+    description: 'Has the ability to access the chapter\'s property in storage.',
+    is_physical: true
+  };
+  Object.freeze(that.STORAGE);
+
+  that.EBOARD = {
+    _id: 'EBOARD',
+    name: 'executive board member',
+    description: 'An elected member of a chapter\'s governing body.'
+    is_physical: true
+  };
+  Object.freeze(that.EBOARD);
+
   Object.freeze(that);
 
   return that;

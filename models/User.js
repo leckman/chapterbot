@@ -77,6 +77,7 @@ var User = (function(userModel) {
    *      pledge_class:
    *      graduation_date:
    *      roles:
+          personal_permissions:
    *    }
    * @param {Function} callback - a function of form callback(err, newUser)
    */
@@ -106,6 +107,28 @@ var User = (function(userModel) {
   that.findById = function(userid, callback) {
     userModel.findById(userid, callback);
   };
+
+  /**
+   * Gets all permissions for a user designated by a given id
+   * when finished, calls callback(err, permissions)
+   */
+  that.getPermissionsForId = function(id, callback) {
+    userModel.findById(id, function(err, user) {
+      if (err) {
+        callback(err);
+        return;
+      }
+
+      // permissions of a user is the union of their personal permissions
+      // and permissions held by their roles
+
+      // TODO populate permissions from roles
+      var rolePermissions =
+
+      allPermissions = set(rolePermissions).junction(user.personal_permissions);
+      callback(null, allPermissions);
+    });
+  }
 
   /**
    * Copy of remove function to delete documents

@@ -6,6 +6,7 @@ var moment = require('moment');
 var request = require('request');
 var qs = require('querystring');
 var User = require('../models/User');
+var Permission = require('../models/Permission');
 
 function generateToken(user) {
   var payload = {
@@ -27,6 +28,37 @@ exports.ensureAuthenticated = function(req, res, next) {
     res.status(401).send({ msg: 'Unauthorized' });
   }
 };
+
+/**
+ * middleware
+ * admin permissions encompass all site-based permissions
+ * generally reserved for a chapter's executives and web manager
+ */
+exports.ensureAdmin = function(req, res, next) {
+  User.getPermissionsForId(req.user.id, function(err, permissions) {
+    if (Permission.ADMIN in permissions) {
+      next();
+    } else {
+      res.status(401).send({ msg: 'Unauthorized: Only admins can perform this action.' });
+    }
+  });
+}
+
+/**
+ * middleware
+ * Continues if a person has physical access to the chapter's storage location
+ */
+exports.ensureCanAccessStorage = function(req, res, next) {
+  User.getPermissionsForId(req.user.id, function(err, permissions) {
+    if (Permission.STORAGE in permissions) {
+      next();
+    } else {
+      res.status(401).send({ msg: 'This user cannot access chapter storage.' });
+    }
+  });
+}
+
+
   /**
    * POST /login
    * Sign in with email and password
@@ -161,7 +193,7 @@ exports.unlink = function(req, res, next) {
         break;
       case 'github':
           user.github = undefined;
-        break;      
+        break;
       default:
         return res.status(400).send({ msg: 'Invalid OAuth Provider' });
     }
