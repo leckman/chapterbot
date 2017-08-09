@@ -12,7 +12,7 @@ var schemaOptions = {
 var permissionSchema = new mongoose.Schema({
   name: String,
   description: String,
-  is_physical: Boolean
+  is_physical: Boolean,
 }, schemaOptions);
 
 var permissionModel = mongoose.model('Permission', permissionSchema);
@@ -71,7 +71,7 @@ var Permission = (function(permissionModel) {
   that.EBOARD = {
     _id: 'EBOARD',
     name: 'executive board member',
-    description: 'An elected member of a chapter\'s governing body.'
+    description: 'An elected member of a chapter\'s governing body.',
     is_physical: true
   };
   Object.freeze(that.EBOARD);
